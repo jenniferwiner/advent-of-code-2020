@@ -5,10 +5,12 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
-	input, err := readFile("./input.txt")
+	start := time.Now()
+	input, err := ReadFile("./input.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -19,14 +21,16 @@ func main() {
 		_, ok := hashmap[lookingFor]
 		if ok {
 			fmt.Printf("Found them: %v, %v\n", val, lookingFor)
-			fmt.Printf("Multiply: %v\n", val * lookingFor)
+			fmt.Printf("Multiply: %v\n", val*lookingFor)
 			break
 		}
 		hashmap[val] = true
 	}
+	end := time.Now()
+	fmt.Printf("Time: %v seconds", end.Sub(start).Seconds())
 }
 
-func readFile(filename string) (nums []int, err error) {
+func ReadFile(filename string) (nums []int, err error) {
 	b, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -52,3 +56,4 @@ func readFile(filename string) (nums []int, err error) {
 
 	return nums, nil
 }
+
