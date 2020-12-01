@@ -15,10 +15,6 @@ func main() {
 
 	hashmap := map[int]bool{}
 	for _, val := range input {
-		hashmap[val] = true
-	}
-
-	for _, val := range input {
 		lookingFor := 2020 - val
 		_, ok := hashmap[lookingFor]
 		if ok {
@@ -26,6 +22,7 @@ func main() {
 			fmt.Printf("Multiply: %v\n", val * lookingFor)
 			break
 		}
+		hashmap[val] = true
 	}
 }
 
