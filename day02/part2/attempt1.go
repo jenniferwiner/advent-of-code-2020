@@ -5,14 +5,16 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+	"time"
 )
 
-type posPWDetails struct {
-	letter string
-	pos []int
-}
-
+/*
+Approach: First Shot
+Benchmarks:
+0.001365219 seconds
+ */
 func main() {
+	start := time.Now()
 	input, err := buildPosPWMap("../input.txt")
 	if err != nil {
 		panic(err)
@@ -33,7 +35,15 @@ func main() {
 			validPwCount++
 		}
 	}
+
 	fmt.Printf("Valid Passwords: %v", validPwCount)
+	end := time.Now()
+	fmt.Printf("Time: %v seconds", end.Sub(start).Seconds())
+}
+
+type posPWDetails struct {
+	letter string
+	pos []int
 }
 
 func buildPosPWMap(filename string) (map[string]posPWDetails, error) {
