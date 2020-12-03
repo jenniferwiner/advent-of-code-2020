@@ -9,29 +9,39 @@ import (
 )
 
 /*
-Approach: First Shot
+Approach: Runes
 Benchmarks:
-0.001365219 seconds
+0.000303921 seconds
  */
 func main() {
 	start := time.Now()
-	input, err := buildPosPWMap("../input.txt")
+	b, err := ioutil.ReadFile("../input.txt")
 	if err != nil {
-		panic(err)
+		fmt.Println(err, "\nYou need a file input.txt in the parent dir")
+		return
 	}
+
 	validPwCount := 0
-	for pw, entry := range input {
-		count := 0
-		for p, v := range pw {
-			currLetter := string(v)
-			if entry.pos[0] == p && currLetter == entry.letter {
-				count++
-			}
-			if entry.pos[1] == p && currLetter == entry.letter {
-				count++
-			}
+	lines := strings.Split(string(b), "\n")
+	for _, l := range lines {
+		// Empty line occurs at the end of the file when we use Split.
+		if len(l) == 0 {
+			continue
 		}
-		if count == 1 {
+		contents := strings.Split(l, " ")
+		numbers := strings.Split(contents[0], "-")
+		letter := []rune(contents[1])[0]
+		password := contents[2]
+
+		upperLimit, err := strconv.Atoi(numbers[0])
+		if err != nil {
+			panic(err)
+		}
+		lowerLimit, err := strconv.Atoi(numbers[1])
+		if err != nil {
+			panic(err)
+		}
+		if (rune(password[lowerLimit-1]) == letter) != (rune(password[upperLimit-1]) == letter) { //Xor between two boolean values
 			validPwCount++
 		}
 	}
@@ -40,48 +50,3 @@ func main() {
 	end := time.Now()
 	fmt.Printf("Time: %v seconds", end.Sub(start).Seconds())
 }
-
-type posPWDetails struct {
-	letter string
-	pos []int
-}
-
-func buildPosPWMap(filename string) (map[string]posPWDetails, error) {
-	b, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-
-	lines := strings.Split(string(b), "\n")
-	entries := map[string]posPWDetails{}
-	for _, l := range lines {
-		// Empty line occurs at the end of the file when we use Split.
-		if len(l) == 0 {
-			continue
-		}
-		// Atoi better suits the job when we know exactly what we're dealing
-		// with. Scanf is the more general option.
-		contents := strings.Split(l, " ")
-		numStr := contents[0]
-		nums := strings.Split(numStr, "-")
-		let := contents[1]
-		pw := contents[2]
-
-		pos1, err := strconv.Atoi(nums[0])
-		if err != nil {
-			return nil, err
-		}
-		pos2, err := strconv.Atoi(nums[1])
-		if err != nil {
-			return nil, err
-		}
-		entries[pw] = posPWDetails{
-			letter: let[:1],
-			// normalize indexes
-			pos: []int{pos1 - 1, pos2 - 1},
-		}
-	}
-
-	return entries, nil
-}
-
