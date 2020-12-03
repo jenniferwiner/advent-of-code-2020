@@ -13,7 +13,7 @@ type posPWDetails struct {
 }
 
 func main() {
-	input, err := buildPosPWMap("./input.txt")
+	input, err := buildPosPWMap("../input.txt")
 	if err != nil {
 		panic(err)
 	}

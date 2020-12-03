@@ -6,16 +6,19 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
-type minMaxPWDetails struct {
-	letter string
-	min int
-	max int
-}
+/*
+Approach: Structs and All - Original Sol'n
 
+Benchmarks:
+Valid Passwords: 564
+Time: 0.000649219 seconds
+ */
 func main() {
-	input, err := buildMinMaxPWMap("./input.txt")
+	start := time.Now()
+	input, err := buildMinMaxPWMap("../input.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -27,6 +30,14 @@ func main() {
 		}
 	}
 	fmt.Printf("Valid Passwords: %v", validPwCount)
+	end := time.Now()
+	fmt.Printf("Time: %v seconds", end.Sub(start).Seconds())
+}
+
+type minMaxPWDetails struct {
+	letter string
+	min int
+	max int
 }
 
 func buildMinMaxPWMap(filename string) (map[string]minMaxPWDetails, error) {
